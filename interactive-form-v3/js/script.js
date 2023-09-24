@@ -60,21 +60,18 @@ payment.children[1].setAttribute('selected', 'selected');
 
 payment.addEventListener('change', (e) => {
     const paymentSelected = e.target.value;
-    const creditCardDiv = document.getElementById('credit-card');
-    const paypalDiv = document.getElementById('paypal');
-    const bitcoinDiv = document.getElementById('bitcoin');
     if (paymentSelected === 'credit-card') {
-        creditCardDiv.hidden = false;
-        paypalDiv.hidden = true;
-        bitcoinDiv.hidden = true;
+        creditCard.hidden = false;
+        paypal.hidden = true;
+        bitcoin.hidden = true;
     } else if (paymentSelected === 'paypal') {
-        creditCardDiv.hidden = true;
-        paypalDiv.hidden = false;
-        bitcoinDiv.hidden = true;
+        creditCard.hidden = true;
+        paypal.hidden = false;
+        bitcoin.hidden = true;
     } else if (paymentSelected === 'bitcoin') {
-        creditCardDiv.hidden = true;
-        paypalDiv.hidden = true;
-        bitcoinDiv.hidden = false;
+        creditCard.hidden = true;
+        paypal.hidden = true;
+        bitcoin.hidden = false;
     }
 });
 
@@ -101,7 +98,7 @@ const isValidEmail = () => {
 
 const isValidCCNumber = () => {
     const userCardNumber = cardNumber.value;
-    const creditCardRegEx = /^[0-9]{12}$/;
+    const creditCardRegEx = /^[0-9]{13,16}$/;
     let testCreditCard = creditCardRegEx.test(userCardNumber);
     if (document.getElementById('credit-card').hidden === true) {
         testCreditCard = false;
@@ -141,18 +138,23 @@ form.addEventListener('submit', (e) => {
     const submitValidator = (inputElement, validatorFunction) => {
         if(validatorFunction()) {
             console.log('it works');
+            inputElement.classList.add('valid');
+            inputElement.classList.remove('not-valid');
         } else {
             e.preventDefault();
             inputElement.classList.add('not-valid');
             inputElement.classList.remove('valid');
+            console.log('it doesn\'t work');
         }
     };
     submitValidator(name.parentElement, isValidName);
     submitValidator(email.parentElement, isValidEmail);
-    submitValidator(creditCard.parentElement, isValidCCNumber);
-    submitValidator(zipcode.parentElement, isValidZipcode);
-    submitValidator(cvv.parentElement, isValidCVV);
-    submitValidator(registerForActivities.firstElementChild, activityChecked);
+    if (creditCard.hidden === false) {
+        submitValidator(cardNumber.parentElement, isValidCCNumber);
+        submitValidator(zipcode.parentElement, isValidZipcode);
+        submitValidator(cvv.parentElement, isValidCVV);
+    }
+    submitValidator(registerForActivities, activityChecked);
 });
 
 for (let i = 0; i < activities.length; i++) {
