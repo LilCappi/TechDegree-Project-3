@@ -119,11 +119,30 @@ payment.addEventListener('change', (e) => {
     }
 });
 
-/*
-activities.addEventListener('change', (e) => {
-    const checkedTime = 
-})
-*/
+// This event listener triggers when a checkbox is checked 
+// and disables other checkboxes that have the same 'date'
+// and 'time' as the selected checkbox.
+
+registerForActivities.addEventListener('change', (e) => {
+    const checkedDayAndTime = e.target.dataset.dayAndTime;
+    if (e.target.checked) {
+        activities.forEach((checkbox) => {
+            const dateTime = checkbox.dataset.dayAndTime;
+            if (dateTime === checkedDayAndTime && event.target !== checkbox) {
+                checkbox.disabled = true;
+                checkbox.parentElement.classList.add('disabled');
+            }
+        })
+    } else {
+        activities.forEach((checkbox) => {
+            const dateTime = checkbox.dataset.dayAndTime;
+            if (dateTime === checkedDayAndTime && event.target !== checkbox) {
+                checkbox.disabled = false;
+                checkbox.parentElement.classList.remove('disabled');
+            }
+        })
+    }
+});
 
 // 'isValid' functions to check whether an input is a
 // valid input using regular expressions.
@@ -143,8 +162,8 @@ const isValidName = () => {
     }
 }
 
-// Email must include an '@' followed by an ending
-// including '.' and 2-3 letter domain extension
+// Email must include an '@' followed by a domain,
+// '.', and a 2-3 letter domain extension
 
 const isValidEmail = () => {
     const userEmail = email.value;
@@ -162,7 +181,7 @@ const isValidCCNumber = () => {
     return testCreditCard;
 }
 
-// Valid must include 5 digits
+// Zipcode must include 5 digits
 
 const isValidZipcode = () => {
     const userZipcode = zipcode.value;
@@ -203,7 +222,7 @@ const activityChecked = () => {
 // form event listener triggers when the submit button is clicked. 
 // The 'submitValidator' function takes in two parameters: inputElement and validatorFunction.
 // This runs through each required fields validator function (isValidName, isValidEmail, etc.)
-//  and either assigns 'not-valid' or 'valid' based on whether the functions validate properly.
+// and either assigns 'not-valid' or 'valid' based on whether the function validates properly.
 
 // If validation is successful:
 // a checkmark icon is displayed and no error indicators are displayed.
